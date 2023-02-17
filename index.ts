@@ -1,12 +1,11 @@
 import { Connection, GetProgramAccountsFilter } from "@solana/web3.js";
 import { TOKEN_PROGRAM_ID } from "@solana/spl-token";
-import { PromisePool } from "@supercharge/promise-pool";
 // import axios from "axios";
 // import { Metaplex } from "@metaplex-foundation/js";
 
 const wallet = "4Jr36dU7y6XxWwFeANMRAhCJNm4ZqvWxTQEV4WmZLtif";
 
-async function processMintAddress() {
+async function getMintAddress() {
   //hide this endpoint during production
   const solana_connection = new Connection(
     "https://special-responsive-dinghy.solana-mainnet.discover.quiknode.pro/5158345c25d3630b3f69ba4d4b524822351941b1/"
@@ -32,26 +31,21 @@ async function processMintAddress() {
     { filters }
   );
 
-  tokenAccounts.forEach(async (account) => {
+  var nfts: any = [];
+
+  tokenAccounts.forEach(async (account, i) => {
     const parsedAccountInfo = account.account.data;
     //@ts-ignore
     const mintAddress = parsedAccountInfo?.parsed?.info?.mint;
+    nfts.push(mintAddress);
+
     //@ts-ignore
     const tokenBalance = parsedAccountInfo?.parsed?.info?.tokenAmount?.uiAmount;
-
-    // console.log(`Token Acccount No. ${i}: ${account.pubkey.toString()}`);
-    const toProcess = [];
-
-    toProcess.push(mintAddress);
-
-    const nftArray = await new PromisePool()
-      .withConcurrency(1)
-      .for(toProcess)
-      .process(async (p) => {
-        console.log(`Getting Mint Address... ${p}`);
-      });
-    // console.log(nftArray);
-    process.exit();
+    // console.log(`Token Acccount No. ${i + i}: ${account.pubkey.toString()}`);
+    // console.log(`--Token Mint ID: ${mintAddress}`);
+    // console.log(`--Token Balance: ${tokenBalance}\n`);
   });
+  console.log(nfts);
 }
-processMintAddress();
+
+getMintAddress();

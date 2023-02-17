@@ -38,13 +38,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var web3_js_1 = require("@solana/web3.js");
 var spl_token_1 = require("@solana/spl-token");
-var promise_pool_1 = require("@supercharge/promise-pool");
 // import axios from "axios";
 // import { Metaplex } from "@metaplex-foundation/js";
 var wallet = "4Jr36dU7y6XxWwFeANMRAhCJNm4ZqvWxTQEV4WmZLtif";
-function processMintAddress() {
+function getMintAddress() {
     return __awaiter(this, void 0, void 0, function () {
-        var solana_connection, filters, tokenAccounts;
+        var solana_connection, filters, tokenAccounts, nfts;
         var _this = this;
         return __generator(this, function (_a) {
             switch (_a.label) {
@@ -66,37 +65,22 @@ function processMintAddress() {
                     return [4 /*yield*/, solana_connection.getParsedProgramAccounts(spl_token_1.TOKEN_PROGRAM_ID, { filters: filters })];
                 case 1:
                     tokenAccounts = _a.sent();
-                    tokenAccounts.forEach(function (account) { return __awaiter(_this, void 0, void 0, function () {
-                        var parsedAccountInfo, mintAddress, tokenBalance, toProcess, nftArray;
-                        var _this = this;
+                    nfts = [];
+                    tokenAccounts.forEach(function (account, i) { return __awaiter(_this, void 0, void 0, function () {
+                        var parsedAccountInfo, mintAddress, tokenBalance;
                         var _a, _b, _c, _d, _e;
                         return __generator(this, function (_f) {
-                            switch (_f.label) {
-                                case 0:
-                                    parsedAccountInfo = account.account.data;
-                                    mintAddress = (_b = (_a = parsedAccountInfo === null || parsedAccountInfo === void 0 ? void 0 : parsedAccountInfo.parsed) === null || _a === void 0 ? void 0 : _a.info) === null || _b === void 0 ? void 0 : _b.mint;
-                                    tokenBalance = (_e = (_d = (_c = parsedAccountInfo === null || parsedAccountInfo === void 0 ? void 0 : parsedAccountInfo.parsed) === null || _c === void 0 ? void 0 : _c.info) === null || _d === void 0 ? void 0 : _d.tokenAmount) === null || _e === void 0 ? void 0 : _e.uiAmount;
-                                    toProcess = [];
-                                    toProcess.push(mintAddress);
-                                    return [4 /*yield*/, new promise_pool_1.PromisePool()
-                                            .withConcurrency(1)["for"](toProcess)
-                                            .process(function (p) { return __awaiter(_this, void 0, void 0, function () {
-                                            return __generator(this, function (_a) {
-                                                console.log("Getting Mint Address... ".concat(p));
-                                                return [2 /*return*/];
-                                            });
-                                        }); })];
-                                case 1:
-                                    nftArray = _f.sent();
-                                    // console.log(nftArray);
-                                    process.exit();
-                                    return [2 /*return*/];
-                            }
+                            parsedAccountInfo = account.account.data;
+                            mintAddress = (_b = (_a = parsedAccountInfo === null || parsedAccountInfo === void 0 ? void 0 : parsedAccountInfo.parsed) === null || _a === void 0 ? void 0 : _a.info) === null || _b === void 0 ? void 0 : _b.mint;
+                            nfts.push(mintAddress);
+                            tokenBalance = (_e = (_d = (_c = parsedAccountInfo === null || parsedAccountInfo === void 0 ? void 0 : parsedAccountInfo.parsed) === null || _c === void 0 ? void 0 : _c.info) === null || _d === void 0 ? void 0 : _d.tokenAmount) === null || _e === void 0 ? void 0 : _e.uiAmount;
+                            return [2 /*return*/];
                         });
                     }); });
+                    console.log(nfts);
                     return [2 /*return*/];
             }
         });
     });
 }
-processMintAddress();
+getMintAddress();
